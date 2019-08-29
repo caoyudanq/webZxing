@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "http://struts.apache.org/dtds/struts-2.5.dtd">
+
+
+<struts>
+<package name="myQrScnner" extends="struts-default" namespace="/">
+<action name="test" class="com.myQrScanner.db.model.SignInFormationUtil" method="test"></action>
+<action name="receiveMessage" class="com.myQrScanner.entity.SignInFormation" method="receiveMessage"></action>
+<action name="login" class="com.myQrScanner.entity.User" method="login"></action>
+<action name="getHisMsgByUserNameAndDay" class="com.myQrScanner.entity.SignInFormation" method="getHisMsgByUserNameAndDay"></action>
+
+</package>
+ 
+</struts>
