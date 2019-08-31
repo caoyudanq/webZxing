@@ -69,7 +69,7 @@ public class OperateFireSensorDB {
 			ptmy.execute();		
 		}
 		
-		public FireSensorInfoUtil queryByFireDetails(String sensorId) throws Exception  {
+		public FireSensorInfoUtil queryBySensorId(String sensorId) throws Exception  {
 			//获得数据库连接
 			Connection conn = DBUtil.getConnection();
 			//拼写sql语句

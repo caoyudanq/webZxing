@@ -17,9 +17,14 @@ import org.apache.struts2.ServletActionContext;
 import com.myQrScanner.common.Constant;
 import com.myQrScanner.db.action.InformationAction;
 import com.myQrScanner.db.action.PanelInfoAction;
+import com.myQrScanner.db.action.SensorInfoAction;
 import com.myQrScanner.db.model.FirePanelInfoUtil;
+import com.myQrScanner.db.model.FireSensorInfoUtil;
 import com.myQrScanner.db.model.HisMes;
+import com.myQrScanner.db.model.Sensor;
+import com.myQrScanner.db.model.SensorDangerousMes;
 import com.myQrScanner.db.model.SignInFormationUtil;
+import com.myQrScanner.db.operateDB.OperateFireSensorDB;
 import com.opensymphony.xwork2.ActionSupport;
 
 import net.sf.json.JSONArray;
@@ -37,10 +42,9 @@ public class SignInFormation extends ActionSupport {
     private Double yPosition;
     private String hisTime;
     private static int qqq = 0;
+    SensorDangerousMes sensorsMes;
 	
 	public String receiveMessage() throws Exception {
-		qqq++;
-		System.out.println("1111111111111111111111111111111qqq="+qqq);
 		
 		SignInFormationUtil signInFormationUtil;
 	    signInFormationUtil = new SignInFormationUtil();
@@ -152,62 +156,99 @@ public class SignInFormation extends ActionSupport {
 	}
 
 	/**
+	 * @throws Exception 
 	 * @Title: responseMes
 	 * @Description: TODO
 	 * @param:    
 	 * @return: void   
 	 * @throws
 	 */
-	private void responseMes(String status) {
+	@SuppressWarnings("unused")
+	private String responseMes(String status) throws Exception {
 		HttpServletResponse response = ServletActionContext.getResponse();
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("application/json; charset=utf-8");
-		JSONObject json=new JSONObject();
+	//	JSONObject json=new JSONObject();	
+	
 		
 		
-		if(status.equals("SUCCESS")) {
-				json.put("status", "\""+status+"\"");			
-				json.put("url", "\""+getUrlString()+"\"");
-				json.put("xPosition", "\""+xPosition+"\"");
-				json.put("yPosition", "\""+yPosition+"\"");		
-				System.out.println("签到成功，无火警 json= "+json.toString());
-		}
-		else if (status.equals("DANGEROUS")) {
-			json.put("status", "\""+status+"\"");			
-			json.put("url", "\""+getUrlString()+"\"");
-			json.put("xPosition", "\""+xPosition+"\"");
-			json.put("yPosition", "\""+yPosition+"\"");		
-			
-			Integer num = Integer.valueOf(fireStatus.substring(1, 4));
-			json.put("fireNum", "\""+num+"\"");
-			
-			if(num<=3) {
-				for(int i = 0;i<num;i++) {
-					int fireId = Integer.valueOf(fireStatus.substring(4+i*3, 7+i*3));
-					json.put("fire"+i, "\""+fireId+"\"");	
-				}
+		if(status.equals("SUCCESS")) {			
+			sensorsMes = new SensorDangerousMes();
+			sensorsMes.setStatus(status);
+			sensorsMes.setUrl(getUrlString());
+			sensorsMes.setxPostion(xPosition);
+			sensorsMes.setyPostion(yPosition);
+			JSONArray jsonArray = JSONArray.fromObject(sensorsMes); 
+			System.out.println("签到成功，无火警 json= "+jsonArray.toString());
+			try {
+				PrintWriter writer = response.getWriter();			
+				writer.write(jsonArray.toString());
+				writer.flush();
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			else {
-				for(int i = 0;i<3;i++) {
-					int fireId = Integer.valueOf(fireStatus.substring(4+i*3, 7+i*3));
-					json.put("fire"+i, "\""+fireId+"\"");					
-				}				
+			return null;	
+		}	
+		
+		else if (status.equals("DANGEROUS")) {
+			Integer num = Integer.valueOf(fireStatus.substring(1, 4));
+			sensorsMes = new SensorDangerousMes();
+			sensorsMes.setStatus(status);
+			sensorsMes.setUrl(getUrlString());
+			sensorsMes.setxPostion(xPosition);
+			sensorsMes.setyPostion(yPosition);
+			sensorsMes.setNum(num);			
+			OperateFireSensorDB operateFireSensorDB = new OperateFireSensorDB();	
+			SensorInfoAction sensorInfoAction = new SensorInfoAction();			
+			ArrayList<Sensor> sensors = new ArrayList<Sensor>();
+			
+			for(int i = 0;i<num;i++) {
+				int fireId = Integer.valueOf(fireStatus.substring(4+i*3, 7+i*3));
+				String sensorId = String.valueOf(fireId);
+				System.out.println("sensorId="+sensorId);	
+				
+				FireSensorInfoUtil fireSensorInfoUtil ;	
+				fireSensorInfoUtil = sensorInfoAction.queryBySensorId(sensorId);
+				if(fireSensorInfoUtil != null) {
+					Double xSensor = fireSensorInfoUtil.getxPosition();
+					Double ySensor = fireSensorInfoUtil.getyPosition();					
+					Sensor sensor = new Sensor(sensorId,xSensor,ySensor);
+					sensors.add(sensor);
+				}
+				else {
+					System.out.println("没有查到发生火警的传感器");	
+					return null;				
+				}
+					
+			}
+			if(sensors != null) {
+				JSONArray jsonArray = JSONArray.fromObject(sensorsMes); 
+				sensorsMes.setSensors(sensors);
+			    jsonArray = JSONArray.fromObject(sensorsMes); 
+				System.out.println("传送sensors jsonarray"+jsonArray.toString());					
+				try {
+					PrintWriter writer = response.getWriter();			
+					writer.write(jsonArray.toString());
+					writer.flush();
+					
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return null;
+				
+			}else {
+				System.out.println("没有查到发生火警的传感器1");	
+				return null;			
 			}
 			
 		}
 		else {
-				json.put("status", "\""+status+"\"");
+			System.out.println("二维码信息有误 ");
 		}
-		
-		try {
-			PrintWriter writer = response.getWriter();			
-			writer.write(json.toString());
-			writer.flush();
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		return null;
 	}
 	
 	public String getHisTime() {

@@ -7,9 +7,12 @@ import java.util.Map;
 
 import com.myQrScanner.db.action.InformationAction;
 import com.myQrScanner.db.action.PanelInfoAction;
+import com.myQrScanner.db.action.SensorInfoAction;
 import com.myQrScanner.db.model.FirePanelInfoUtil;
+import com.myQrScanner.db.model.FireSensorInfoUtil;
 import com.myQrScanner.db.model.SignInFormationUtil;
 import com.myQrScanner.db.operateDB.OperateFirePanelDB;
+import com.myQrScanner.db.operateDB.OperateFireSensorDB;
 import com.myQrScanner.db.operateDB.OperateSignInFormation;
 
 
@@ -19,12 +22,22 @@ public class Test {
 //		PanelInfoAction informationAction = new PanelInfoAction();
 //		informationAction.del(2);
 			
-		OperateFirePanelDB operateFirePanelDB = new OperateFirePanelDB();
 		
-		FirePanelInfoUtil firePanelInfoUtil = new FirePanelInfoUtil();
-		PanelInfoAction panelInfoAction = new PanelInfoAction();
-		firePanelInfoUtil = panelInfoAction.queryByFireDetails("00000");
-		System.out.println(firePanelInfoUtil.toString());
+//		OperateFirePanelDB operateFirePanelDB = new OperateFirePanelDB();
+//		
+//		FirePanelInfoUtil firePanelInfoUtil = new FirePanelInfoUtil();
+//		PanelInfoAction panelInfoAction = new PanelInfoAction();
+//		firePanelInfoUtil = panelInfoAction.queryByFireDetails("00000");
+//		System.out.println(firePanelInfoUtil.toString());
+		
+		
+		OperateFireSensorDB operateFireSensorDB = new OperateFireSensorDB();
+		FireSensorInfoUtil fireSensorInfoUtil = new FireSensorInfoUtil();		
+		SensorInfoAction sensorInfoAction = new SensorInfoAction();
+		
+		fireSensorInfoUtil = sensorInfoAction.queryBySensorId("101");
+		System.out.println(fireSensorInfoUtil.toString());
+		
 		
 //		List<Map<String, Object>> params= new ArrayList<Map<String,Object>>();
 //		Map<String, Object> param = new HashMap<String, Object>();

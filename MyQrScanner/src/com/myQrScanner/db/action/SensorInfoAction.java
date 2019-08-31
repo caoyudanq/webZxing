@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.myQrScanner.db.model.FirePanelInfoUtil;
+import com.myQrScanner.db.model.FireSensorInfoUtil;
 import com.myQrScanner.db.operateDB.OperateFirePanelDB;
+import com.myQrScanner.db.operateDB.OperateFireSensorDB;
 
 public class SensorInfoAction {
 	/**
@@ -16,8 +18,8 @@ public class SensorInfoAction {
 	 * @return: void   
 	 * @throws
 	 */
-	public void add(FirePanelInfoUtil f) throws Exception {
-		OperateFirePanelDB operate = new OperateFirePanelDB();
+	public void add(FireSensorInfoUtil f) throws Exception {
+		OperateFireSensorDB operate = new OperateFireSensorDB();
 		operate.addInformation(f);	
 	}
 	/**
@@ -29,8 +31,8 @@ public class SensorInfoAction {
 	 * @return: void   
 	 * @throws
 	 */
-	public void update(FirePanelInfoUtil f) throws Exception {
-		OperateFirePanelDB operate = new OperateFirePanelDB();
+	public void update(FireSensorInfoUtil f) throws Exception {
+		OperateFireSensorDB operate = new OperateFireSensorDB();
 		operate.updateInformation(f);
 		
 	}
@@ -44,7 +46,7 @@ public class SensorInfoAction {
 	 * @throws
 	 */
 	public void del(Integer id) throws Exception {
-		OperateFirePanelDB operate = new OperateFirePanelDB();
+		OperateFireSensorDB operate = new OperateFireSensorDB();
 		operate.delInformation(id);
 	}
 	
@@ -58,9 +60,9 @@ public class SensorInfoAction {
 	 * @return: FirePanelInfoUtil   
 	 * @throws
 	 */
-	public FirePanelInfoUtil queryByFireDetails(String fireDetails ) throws Exception {
-		OperateFirePanelDB operate = new OperateFirePanelDB();
-		return operate.queryByFireDetails(fireDetails);	
+	public FireSensorInfoUtil queryBySensorId(String sensorId ) throws Exception {
+		OperateFireSensorDB operate = new OperateFireSensorDB();
+		return operate.queryBySensorId(sensorId);
 	}
 	
 	/**
@@ -70,11 +72,11 @@ public class SensorInfoAction {
 	 * @param: @param params
 	 * @param: @return
 	 * @param: @throws Exception   
-	 * @return: List<FirePanelInfoUtil>   
+	 * @return: List<FireSensorInfoUtil>   
 	 * @throws
 	 */
-	public List<FirePanelInfoUtil> query(List<Map<String, Object>> params) throws Exception {
-		OperateFirePanelDB operate = new OperateFirePanelDB();
+	public List<FireSensorInfoUtil> query(List<Map<String, Object>> params) throws Exception {
+		OperateFireSensorDB operate = new OperateFireSensorDB();
 		return operate.queryInformation(params);	
 	}
 
