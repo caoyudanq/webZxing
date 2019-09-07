@@ -19,6 +19,7 @@ public class User extends ActionSupport {
 	private String userName;
 	private String password;
 	private String phone;
+	private String password1;
 	
 	public void login() throws Exception {
 		HttpServletResponse response = ServletActionContext.getResponse();
@@ -29,7 +30,6 @@ public class User extends ActionSupport {
 		
 		if(login) {
 				json.put("status", "登录成功");			
-//				json.put("url", "\""+getUrlString()+"\"");
 				System.out.println("登陆成功 "+json.toString());
 		}
 		else {
@@ -60,64 +60,72 @@ public class User extends ActionSupport {
 		}
 		return false;
 	}
-
-	public void saveUser() throws Exception {
-		UserAction userAction = new UserAction();
-		UserUtil userUtil = new UserUtil(userName,password,phone);		
-		userAction.add(userUtil);	
+	
+	
+	public void signup() throws Exception {
+		System.out.println("注册开始 ");
+		HttpServletResponse response = ServletActionContext.getResponse();
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("application/json; charset=utf-8");
+		JSONObject json=new JSONObject();
+		if(!password.equals(password1)) {
+			json.put("status", "注册失败");
+			System.out.println("注册失败 "+json.toString());
+			return;
+		}
+		else {
+			UserAction userAction = new UserAction();
+			UserUtil userUtil = new UserUtil(userName,password,phone);		
+			userAction.add(userUtil);	
+			json.put("status", "注册成功");
+			System.out.println("注册成功 "+json.toString());
+		}
+		try {
+			PrintWriter writer = response.getWriter();			
+			writer.write(json.toString());
+			writer.flush();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
-//	private void responseMes(String status) {
-//		HttpServletResponse response = ServletActionContext.getResponse();
-//		response.setCharacterEncoding("UTF-8");
-//		response.setContentType("application/json; charset=utf-8");
-//		JSONObject json=new JSONObject();
-//		
-//		
-//		if(status.equals("SUCCESS")) {
-//				json.put("status", "\""+status+"\"");			
-//				json.put("url", "\""+getUrlString()+"\"");
-//				json.put("xPosition", "\""+xPosition+"\"");
-//				json.put("yPosition", "\""+yPosition+"\"");		
-//				System.out.println("签到成功，无火警 json= "+json.toString());
-//		}
-//		else if (status.equals("DANGEROUS")) {
-//			json.put("status", "\""+status+"\"");			
-//			json.put("url", "\""+getUrlString()+"\"");
-//			json.put("xPosition", "\""+xPosition+"\"");
-//			json.put("yPosition", "\""+yPosition+"\"");		
-//			
-//			Integer num = Integer.valueOf(fireStatus.substring(1, 4));
-//			json.put("fireNum", "\""+num+"\"");
-//			
-//			if(num<=3) {
-//				for(int i = 0;i<num;i++) {
-//					int fireId = Integer.valueOf(fireStatus.substring(4+i*3, 7+i*3));
-//					json.put("fire"+i, "\""+fireId+"\"");	
-//				}
-//			}
-//			else {
-//				for(int i = 0;i<3;i++) {
-//					int fireId = Integer.valueOf(fireStatus.substring(4+i*3, 7+i*3));
-//					json.put("fire"+i, "\""+fireId+"\"");					
-//				}				
-//			}
-//			
-//		}
-//		else {
-//				json.put("status", "\""+status+"\"");
-//		}
-//		
-//		try {
-//			PrintWriter writer = response.getWriter();			
-//			writer.write(json.toString());
-//			writer.flush();
-//			
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//	}
+	
+	public void getUserByName() throws Exception {
+		System.out.println("huoqu 开始 ");
+		HttpServletResponse response = ServletActionContext.getResponse();
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("application/json; charset=utf-8");
+		JSONObject json=new JSONObject();
+		UserAction userAction = new UserAction();
+		UserUtil userUtil = userAction.getUserByUserName(userName);		
+		if(userUtil == null) {
+			json.put("status", "获取信息失败");
+			System.out.println("获取信息失败！"+json.toString());
+		}
+		else {
+			System.out.println("获取信息成功！"+json.toString());
+			json.put("status", "获取信息成功");
+			json.put("userName", userUtil.getUserName());
+			json.put("phone", userUtil.getPhone());		
+		}	
+		try {
+			PrintWriter writer = response.getWriter();			
+			writer.write(json.toString());
+			writer.flush();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+	
+	
+	
+	
 
 //	@Override
 //	public User getUser(int userId) {
@@ -173,6 +181,14 @@ public class User extends ActionSupport {
 	}
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getPassword1() {
+		return password1;
+	}
+
+	public void setPassword1(String password1) {
+		this.password1 = password1;
 	}
 	
 	

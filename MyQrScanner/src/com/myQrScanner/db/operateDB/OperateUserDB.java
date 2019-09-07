@@ -98,7 +98,7 @@ public class OperateUserDB {
 			return gs;	
 		}
 		
-		public UserUtil getUserByName(String userName,String password) throws Exception {
+		public UserUtil getUserByNameAndPassword(String userName,String password) throws Exception {
 			
 			Connection conn = DBUtil.getConnection();
 
@@ -116,29 +116,28 @@ public class OperateUserDB {
 				g.setPassword(rs.getString("password"));
 				g.setPhone(rs.getString("phone"));
 			}
-			return g;	
+			return g;					
+		}
+		
+		
+		
+		public UserUtil getUserByName(String userName) throws Exception {
 			
-			
-//			//获得数据库连接
-//			Connection conn = DBUtil.getConnection();
-//			//拼写sql语句
-//			String sqlString ="select * from sensorInformation where userName = ? and password = ?";
-//								//占位符，在下面的Sql语句预编译的时候把参数传进去
-//			//预编译sql语句
-//			PreparedStatement ptmy = conn.prepareStatement(sqlString);
-//			
-//			ptmy.setString(1, userName);
-//			ptmy.setString(2, password);
-//			
-//			//执行
-//			ResultSet rs = ptmy.executeQuery();	
-//			UserUtil userUtil =null;
-//			while (rs.next()) {	
-//				userUtil = new UserUtil();
-//				userUtil.setUserName(rs.getString("userName"));
-//				userUtil.setPassword("password");
-//				userUtil.setPhone("phone");		
-//			}		
-//			return userUtil ;					
+			Connection conn = DBUtil.getConnection();
+
+			String sqlString ="select * from user1 where userName=?";
+			PreparedStatement ptmy  = conn.prepareStatement(sqlString);
+
+			ptmy.setString(1, userName);
+			//执行
+			ResultSet rs=ptmy.executeQuery();	
+			UserUtil g = null;	
+			while (rs.next()) {	
+				g = new UserUtil();
+				g.setUserName(rs.getString("userName"));
+				g.setPassword(rs.getString("password"));
+				g.setPhone(rs.getString("phone"));
+			}
+			return g;					
 		}
 }

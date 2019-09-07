@@ -83,7 +83,13 @@ public class UserAction {
 	
 	public UserUtil getUserByUserNameAndPassword (String userName,String password) throws Exception {
 		OperateUserDB operate = new OperateUserDB();
-		return operate.getUserByName(userName,password);
+		return operate.getUserByNameAndPassword(userName,password);
+		
+	}
+	
+	public UserUtil getUserByUserName (String userName) throws Exception {
+		OperateUserDB operate = new OperateUserDB();
+		return operate.getUserByName(userName);
 		
 	}
 

@@ -10,6 +10,8 @@
 <action name="test" class="com.myQrScanner.db.model.SignInFormationUtil" method="test"></action>
 <action name="receiveMessage" class="com.myQrScanner.entity.SignInFormation" method="receiveMessage"></action>
 <action name="login" class="com.myQrScanner.entity.User" method="login"></action>
+<action name="signup" class="com.myQrScanner.entity.User" method="signup"></action>
+<action name="myInfo" class="com.myQrScanner.entity.User" method="getUserByName"></action>
 <action name="getHisMsgByUserNameAndDay" class="com.myQrScanner.entity.SignInFormation" method="getHisMsgByUserNameAndDay"></action>
 
 </package>
